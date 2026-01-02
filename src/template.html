@@ -44,6 +44,7 @@
     .highlight{background:#fffde7;border-left:4px solid #ffc107;padding:12px 16px;margin:12px 0;border-radius:0 8px 8px 0}
     .highlight.blue{background:#e3f2fd;border-left-color:#2196f3}
     .highlight.red{background:#ffebee;border-left-color:#f44336}
+    .highlight.green{background:#e8f5e9;border-left-color:#4caf50}
 
     .bookmarklet-container{text-align:center;padding:30px;background:linear-gradient(135deg,#f8f9fa,#e9ecef);border-radius:8px;margin:20px 0}
     .bookmarklet{display:inline-block;background:linear-gradient(135deg,#0d5c55,#0a8);color:#fff;padding:18px 36px;border-radius:10px;text-decoration:none;font-weight:600;font-size:18px;cursor:grab;box-shadow:0 4px 12px rgba(13,92,85,.3);transition:transform .2s,box-shadow .2s}
@@ -113,10 +114,14 @@
 
     <!-- Step 3: Installation Instructions -->
     <div class="card">
-      <h2><span class="icon">📥</span> Schritt 3: Installation <span class="size-badge">{{BOOKMARKLET_SIZE}}</span></h2>
+      <h2><span class="icon">📥</span> Schritt 3: Installation</h2>
 
       <!-- CITRIX Environment -->
       <div id="env-citrix" class="env-content active">
+        <div class="highlight green">
+          ✨ <strong>Direkter Outlook-Start:</strong> Klick auf das Bookmarklet öffnet sofort eine neue Mail mit allen Daten!
+        </div>
+
         <div class="highlight blue">
           ✅ <strong>Einfache Installation:</strong> Du kannst den Button direkt in deine Lesezeichenleiste ziehen!
         </div>
@@ -160,8 +165,9 @@
         </div>
 
         <div class="bookmarklet-container">
-          <a class="bookmarklet" href="{{BOOKMARKLET_URL}}" title="Ziehe mich in deine Lesezeichenleiste!">📋 RIS Meldung</a>
+          <a class="bookmarklet" href="{{BOOKMARKLET_CITRIX}}" title="Ziehe mich in deine Lesezeichenleiste!">📧 RIS Meldung</a>
           <p class="drag-hint">⬆️ Diesen Button mit der Maus in die Lesezeichenleiste ziehen</p>
+          <p style="margin-top:8px;font-size:12px;color:#888">{{BOOKMARKLET_SIZE_CITRIX}}</p>
         </div>
       </div>
 
@@ -234,23 +240,43 @@
         </div>
 
         <div class="code-box">
-          <textarea id="code" readonly>{{BOOKMARKLET_URL}}</textarea>
+          <textarea id="code" readonly>{{BOOKMARKLET_DESKTOP}}</textarea>
           <button onclick="copyCode()">Kopieren</button>
         </div>
+        <p style="margin-top:8px;font-size:12px;color:#888;text-align:center">{{BOOKMARKLET_SIZE_DESKTOP}}</p>
       </div>
     </div>
 
+    <!-- How it works - Environment specific -->
     <div class="card">
       <h2><span class="icon">🎯</span> So funktioniert's</h2>
-      <ol class="steps">
-        <li>Öffne eine <strong>ProWorX-Patientenseite</strong> mit Untersuchungsdetails</li>
-        <li>Klicke auf <strong>"RIS Meldung"</strong> in deiner Lesezeichenleiste</li>
-        <li>Die Meldung wird <strong>in die Zwischenablage kopiert</strong> - ein Popup zeigt die extrahierten Daten</li>
-        <li>Wechsle zu <strong>Outlook in Citrix</strong> und erstelle eine neue E-Mail</li>
-        <li>Drücke <strong>Strg+V</strong> zum Einfügen</li>
-        <li>Fülle die Felder <strong>MTRA</strong>, <strong>Arzt</strong> und <strong>Problembeschreibung</strong> aus</li>
-        <li>Klicke auf <strong>Senden</strong> - fertig!</li>
-      </ol>
+
+      <!-- Citrix Workflow -->
+      <div id="workflow-citrix" class="env-content active">
+        <ol class="steps">
+          <li>Öffne eine <strong>ProWorX-Patientenseite</strong> mit Untersuchungsdetails</li>
+          <li>Klicke auf <strong>"RIS Meldung"</strong> in deiner Lesezeichenleiste</li>
+          <li><strong>Outlook öffnet sich automatisch</strong> mit einer neuen Mail - die Daten sind schon eingefügt!</li>
+          <li>Fülle die Felder <strong>MTRA</strong>, <strong>Arzt</strong> und <strong>Problembeschreibung</strong> aus</li>
+          <li>Klicke auf <strong>Senden</strong> - fertig!</li>
+        </ol>
+        <div class="highlight green" style="margin-top:20px">
+          💡 <strong>Nur 5 Schritte!</strong> Das Bookmarklet öffnet Outlook direkt - kein Kopieren nötig.
+        </div>
+      </div>
+
+      <!-- Desktop Workflow -->
+      <div id="workflow-desktop" class="env-content">
+        <ol class="steps">
+          <li>Öffne eine <strong>ProWorX-Patientenseite</strong> mit Untersuchungsdetails</li>
+          <li>Klicke auf <strong>"RIS Meldung"</strong> in deiner Lesezeichenleiste</li>
+          <li>Die Meldung wird <strong>in die Zwischenablage kopiert</strong> - ein Popup zeigt die extrahierten Daten</li>
+          <li>Wechsle zu <strong>Outlook in Citrix</strong> und erstelle eine neue E-Mail</li>
+          <li>Drücke <strong>Strg+V</strong> zum Einfügen</li>
+          <li>Fülle die Felder <strong>MTRA</strong>, <strong>Arzt</strong> und <strong>Problembeschreibung</strong> aus</li>
+          <li>Klicke auf <strong>Senden</strong> - fertig!</li>
+        </ol>
+      </div>
     </div>
 
     <div class="card help">
@@ -260,12 +286,13 @@
         <li><strong>Kein Bestätigungsfenster?</strong> → Browser evtl. neu laden und nochmal versuchen</li>
         <li><strong>Daten fehlen?</strong> → Die Seite muss die Untersuchungsdetails anzeigen</li>
         <li><strong>Code lässt sich nicht einfügen?</strong> → Stelle sicher, dass du in das URL-Feld klickst, nicht in das Name-Feld</li>
+        <li><strong>Outlook öffnet sich nicht? (Citrix)</strong> → Stelle sicher, dass Outlook als Standard-Mail-Programm eingerichtet ist</li>
       </ul>
     </div>
   </div>
 
   <div class="footer">
-    RIS Einzelfallmeldung Bookmarklet v1.1
+    RIS Einzelfallmeldung Bookmarklet v1.2
   </div>
 
   <script>
@@ -278,6 +305,7 @@
       document.querySelector(`[onclick="setEnv('${env}')"]`).classList.add('active');
       document.querySelectorAll('.env-content').forEach(c => c.classList.remove('active'));
       document.getElementById('env-' + env).classList.add('active');
+      document.getElementById('workflow-' + env).classList.add('active');
       updateBrowserContent();
     }
 

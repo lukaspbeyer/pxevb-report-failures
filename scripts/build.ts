@@ -2,10 +2,10 @@
  * Build Pipeline for RIS Einzelfallmeldung Bookmarklet
  *
  * Flow:
- *   src/bookmarklet.ts  ──┐
- *                         ├──▶  dist/install.html
- *   src/template.html   ──┤
- *                         └──▶  worker/index.ts (generated)
+ *   src/bookmarklet-citrix.ts   ──┐
+ *   src/bookmarklet-desktop.ts  ──┼──▶  dist/install.html
+ *   src/template.html           ──┤
+ *                                 └──▶  worker/index.ts (generated)
  */
 
 import * as esbuild from "esbuild";
@@ -18,22 +18,36 @@ const root = join(__dirname, "..");
 
 // Paths
 const PATHS = {
-  bookmarkletSrc: join(root, "src/bookmarklet.ts"),
+  // Source files
+  citrixSrc: join(root, "src/bookmarklet-citrix.ts"),
+  desktopSrc: join(root, "src/bookmarklet-desktop.ts"),
   templateSrc: join(root, "src/template.html"),
+  // Output directories
   distDir: join(root, "dist"),
   workerDir: join(root, "worker"),
+  // Generated files
   installHtml: join(root, "dist/install.html"),
   workerTs: join(root, "worker/index.ts"),
-  bookmarkletMin: join(root, "dist/bookmarklet.min.js"),
-  bookmarkletTxt: join(root, "dist/bookmarklet.txt"),
+  citrixMin: join(root, "dist/bookmarklet-citrix.min.js"),
+  citrixTxt: join(root, "dist/bookmarklet-citrix.txt"),
+  desktopMin: join(root, "dist/bookmarklet-desktop.min.js"),
+  desktopTxt: join(root, "dist/bookmarklet-desktop.txt"),
 } as const;
 
-async function build() {
-  console.log("🔨 Building bookmarklet...\n");
+interface BuildResult {
+  name: string;
+  minified: string;
+  url: string;
+  jsSize: number;
+  urlSize: number;
+}
 
-  // 1. Compile & minify TypeScript
+async function buildBookmarklet(
+  entryPoint: string,
+  name: string
+): Promise<BuildResult> {
   const result = await esbuild.build({
-    entryPoints: [PATHS.bookmarkletSrc],
+    entryPoints: [entryPoint],
     bundle: true,
     minify: true,
     write: false,
@@ -46,38 +60,54 @@ async function build() {
   });
 
   const minified = result.outputFiles[0]?.text ?? "";
-  const bookmarkletUrl = `javascript:${encodeURIComponent(minified)}`;
+  const url = `javascript:${encodeURIComponent(minified)}`;
 
-  // 2. Calculate sizes
-  const jsSize = Buffer.byteLength(minified, "utf8");
-  const urlSize = Buffer.byteLength(bookmarkletUrl, "utf8");
+  return {
+    name,
+    minified,
+    url,
+    jsSize: Buffer.byteLength(minified, "utf8"),
+    urlSize: Buffer.byteLength(url, "utf8"),
+  };
+}
 
-  // 3. Ensure directories exist
+async function build() {
+  console.log("🔨 Building bookmarklets...\n");
+
+  // 1. Compile both variants in parallel
+  const [citrix, desktop] = await Promise.all([
+    buildBookmarklet(PATHS.citrixSrc, "Citrix (mailto:)"),
+    buildBookmarklet(PATHS.desktopSrc, "Desktop (Clipboard)"),
+  ]);
+
+  // 2. Ensure dist directory exists
   mkdirSync(PATHS.distDir, { recursive: true });
 
-  // 4. Write minified JS and URL
-  writeFileSync(PATHS.bookmarkletMin, minified);
-  writeFileSync(PATHS.bookmarkletTxt, bookmarkletUrl);
+  // 3. Write minified JS and URL files
+  writeFileSync(PATHS.citrixMin, citrix.minified);
+  writeFileSync(PATHS.citrixTxt, citrix.url);
+  writeFileSync(PATHS.desktopMin, desktop.minified);
+  writeFileSync(PATHS.desktopTxt, desktop.url);
 
-  // 5. Generate HTML from template
-  const html = generateHtml(bookmarkletUrl, urlSize);
+  // 4. Generate HTML from template
+  const html = generateHtml(citrix, desktop);
 
-  // 6. Write dist/install.html
+  // 5. Write dist/install.html
   writeFileSync(PATHS.installHtml, html);
 
-  // 7. Generate worker/index.ts
+  // 6. Generate worker/index.ts
   generateWorker(html);
 
-  // 8. Output summary
-  printSummary(jsSize, urlSize);
+  // 7. Output summary
+  printSummary(citrix, desktop);
 
-  return { minified, bookmarkletUrl, jsSize, urlSize };
+  return { citrix, desktop };
 }
 
 /**
  * Generate HTML by replacing placeholders in template
  */
-function generateHtml(bookmarkletUrl: string, size: number): string {
+function generateHtml(citrix: BuildResult, desktop: BuildResult): string {
   if (!existsSync(PATHS.templateSrc)) {
     throw new Error(`Template not found: ${PATHS.templateSrc}`);
   }
@@ -85,11 +115,20 @@ function generateHtml(bookmarkletUrl: string, size: number): string {
   const template = readFileSync(PATHS.templateSrc, "utf8");
 
   // Escape quotes for href attribute
-  const safeUrl = bookmarkletUrl.replace(/"/g, "&quot;");
+  const safeCitrixUrl = citrix.url.replace(/"/g, "&quot;");
+  const safeDesktopUrl = desktop.url.replace(/"/g, "&quot;");
 
   return template
-    .replace(/\{\{BOOKMARKLET_URL\}\}/g, safeUrl)
-    .replace(/\{\{BOOKMARKLET_SIZE\}\}/g, `${size.toLocaleString()} Bytes`);
+    .replace(/\{\{BOOKMARKLET_CITRIX\}\}/g, safeCitrixUrl)
+    .replace(/\{\{BOOKMARKLET_DESKTOP\}\}/g, safeDesktopUrl)
+    .replace(
+      /\{\{BOOKMARKLET_SIZE_CITRIX\}\}/g,
+      `${citrix.urlSize.toLocaleString()} Bytes`
+    )
+    .replace(
+      /\{\{BOOKMARKLET_SIZE_DESKTOP\}\}/g,
+      `${desktop.urlSize.toLocaleString()} Bytes`
+    );
 }
 
 /**
@@ -103,7 +142,7 @@ function generateWorker(html: string): void {
     .replace(/\$\{/g, "\\${");
 
   const workerCode = `// ⚠️ GENERATED FILE - DO NOT EDIT
-// Source: src/template.html + src/bookmarklet.ts
+// Source: src/template.html + src/bookmarklet-*.ts
 // Run 'pnpm build' to regenerate
 
 const HTML = \`${escapedHtml}\`;
@@ -123,19 +162,28 @@ export default {
 /**
  * Print build summary
  */
-function printSummary(jsSize: number, urlSize: number): void {
+function printSummary(citrix: BuildResult, desktop: BuildResult): void {
   console.log(`✅ Build complete!\n`);
-  console.log(`📊 Sizes:`);
-  console.log(`   JS:  ${jsSize.toLocaleString()} bytes`);
-  console.log(`   URL: ${urlSize.toLocaleString()} bytes`);
 
-  if (urlSize > 2000) {
-    console.log(`\n⚠️  URL > 2000 bytes - may not work in all browsers!`);
+  console.log(`📊 Citrix (mailto:):`);
+  console.log(`   JS:  ${citrix.jsSize.toLocaleString()} bytes`);
+  console.log(`   URL: ${citrix.urlSize.toLocaleString()} bytes`);
+  if (citrix.urlSize > 2000) {
+    console.log(`   ⚠️  URL > 2000 bytes - may not work in all browsers!`);
+  }
+
+  console.log(`\n📊 Desktop (Clipboard):`);
+  console.log(`   JS:  ${desktop.jsSize.toLocaleString()} bytes`);
+  console.log(`   URL: ${desktop.urlSize.toLocaleString()} bytes`);
+  if (desktop.urlSize > 2000) {
+    console.log(`   ⚠️  URL > 2000 bytes - may not work in all browsers!`);
   }
 
   console.log(`\n📁 Generated files:`);
-  console.log(`   dist/bookmarklet.min.js`);
-  console.log(`   dist/bookmarklet.txt`);
+  console.log(`   dist/bookmarklet-citrix.min.js`);
+  console.log(`   dist/bookmarklet-citrix.txt`);
+  console.log(`   dist/bookmarklet-desktop.min.js`);
+  console.log(`   dist/bookmarklet-desktop.txt`);
   console.log(`   dist/install.html`);
   console.log(`   worker/index.ts`);
 }

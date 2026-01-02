@@ -1,5 +1,5 @@
 // ⚠️ GENERATED FILE - DO NOT EDIT
-// Source: src/template.html + src/bookmarklet.ts
+// Source: src/template.html + src/bookmarklet-*.ts
 // Run 'pnpm build' to regenerate
 
 const HTML = `<!DOCTYPE html>
@@ -48,6 +48,7 @@ const HTML = `<!DOCTYPE html>
     .highlight{background:#fffde7;border-left:4px solid #ffc107;padding:12px 16px;margin:12px 0;border-radius:0 8px 8px 0}
     .highlight.blue{background:#e3f2fd;border-left-color:#2196f3}
     .highlight.red{background:#ffebee;border-left-color:#f44336}
+    .highlight.green{background:#e8f5e9;border-left-color:#4caf50}
 
     .bookmarklet-container{text-align:center;padding:30px;background:linear-gradient(135deg,#f8f9fa,#e9ecef);border-radius:8px;margin:20px 0}
     .bookmarklet{display:inline-block;background:linear-gradient(135deg,#0d5c55,#0a8);color:#fff;padding:18px 36px;border-radius:10px;text-decoration:none;font-weight:600;font-size:18px;cursor:grab;box-shadow:0 4px 12px rgba(13,92,85,.3);transition:transform .2s,box-shadow .2s}
@@ -117,10 +118,14 @@ const HTML = `<!DOCTYPE html>
 
     <!-- Step 3: Installation Instructions -->
     <div class="card">
-      <h2><span class="icon">📥</span> Schritt 3: Installation <span class="size-badge">3.509 Bytes</span></h2>
+      <h2><span class="icon">📥</span> Schritt 3: Installation</h2>
 
       <!-- CITRIX Environment -->
       <div id="env-citrix" class="env-content active">
+        <div class="highlight green">
+          ✨ <strong>Direkter Outlook-Start:</strong> Klick auf das Bookmarklet öffnet sofort eine neue Mail mit allen Daten!
+        </div>
+
         <div class="highlight blue">
           ✅ <strong>Einfache Installation:</strong> Du kannst den Button direkt in deine Lesezeichenleiste ziehen!
         </div>
@@ -164,8 +169,9 @@ const HTML = `<!DOCTYPE html>
         </div>
 
         <div class="bookmarklet-container">
-          <a class="bookmarklet" href="javascript:%22use%20strict%22%3B(()%3D%3E%7B(()%3D%3E%7Blet%20e%3Dt%3D%3E%5B...document.querySelectorAll(%22dt%22)%5D.find(i%3D%3Ei.textContent%3F.includes(t))%3F.nextElementSibling%3F.textContent%3F.trim()%3F%3F%22%22%2Cn%3Dnew%20Date%2Cc%3DString(n.getFullYear()).slice(-2)%2Cl%3DString(n.getMonth()%2B1).padStart(2%2C%220%22)%2Ca%3DString(n.getDate()).padStart(2%2C%220%22)%2Cu%3DMath.random().toString(36).substring(2%2C6).toUpperCase()%2Cr%3D%60RIS-%24%7Bc%7D%24%7Bl%7D%24%7Ba%7D-%24%7Bu%7D%60%2Co%3Ddocument.querySelector(%22%23ph%20p%22)%3F.textContent%3F.match(%2FID%3A%5Cs*(%5Cd%2B)%2F)%3F.%5B1%5D%3F%3F%22-%22%2Cp%3De(%22Untersuchungs-Nr%22)%7C%7C%22-%22%2Cd%3De(%22Accession-Nr%22)%7C%7C%22-%22%2Cs%3De(%22Untersuchung%22)%7C%7C%22-%22%2Cb%3D%60An%3A%20steffen.burghardt%40klinikumevb.de%3B%20kristin.frohberg-grzyl%40klinikumevb.de%0ABetreff%3A%20%24%7Br%7D%20-%20Einzelfallmeldung%0A%0APatient-ID%3A%0A%20%24%7Bo%7D%0A%0AUntersuchungsnummer%3A%0A%20%24%7Bp%7D%0A%0AAccession-Nummer%3A%0A%20%24%7Bd%7D%0A%0AProzedurenname%3A%0A%20%24%7Bs%7D%0A%0AInvolvierte%20MTRA%3A%0A%20%5Bbitte%20ausf%C3%BCllen%5D%0A%0AInvolvierte%20Aerztin%20%2F%20Arzt%3A%0A%20%5Bbitte%20ausf%C3%BCllen%5D%0A%0AProblembeschreibung%20(detailliert)%3A%0A%20%5BPFLICHTFELD!%5D%0A%0AOPL%20Punkt%20Nr.%3A%0A%20%5Bnicht%20ausf%C3%BCllen%20-%20wird%20bei%20Weiterbearbeitung%20erg%C3%A4nzt%5D%0A---%60%3Bnavigator.clipboard.writeText(b).then(()%3D%3E%7Blet%20t%3Ddocument.createElement(%22div%22)%3Bt.style.cssText%3D%22position%3Afixed%3Binset%3A0%3Bbackground%3A%230008%3Bz-index%3A999999%3Bdisplay%3Aflex%3Balign-items%3Acenter%3Bjustify-content%3Acenter%3Bfont-family%3Asystem-ui%22%2Ct.onclick%3Di%3D%3Ei.target%3D%3D%3Dt%26%26t.remove()%2Ct.innerHTML%3D%60%3Cdiv%20style%3D%22background%3A%23fff%3Bpadding%3A24px%3Bborder-radius%3A12px%3Bmax-width%3A380px%3Btext-align%3Acenter%22%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22font-size%3A44px%22%3E%E2%9C%85%3C%2Fdiv%3E%0A%20%20%20%20%20%20%3Ch2%20style%3D%22margin%3A8px%200%2012px%3Bcolor%3A%230d5c55%22%3EKopiert!%3C%2Fh2%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22background%3A%230d5c55%3Bcolor%3A%23fff%3Bpadding%3A8px%2016px%3Bborder-radius%3A6px%3Bfont-family%3Amonospace%3Bfont-size%3A15px%3Bmargin-bottom%3A16px%22%3E%24%7Br%7D%3C%2Fdiv%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22background%3A%23f5f5f5%3Bborder-radius%3A8px%3Bpadding%3A12px%3Bmargin-bottom%3A16px%3Btext-align%3Aleft%3Bfont-size%3A13px%3Bline-height%3A1.6%22%3E%0A%20%20%20%20%20%20%20%20%3Cdiv%20style%3D%22color%3A%23666%3Bfont-size%3A11px%3Bmargin-bottom%3A6px%22%3EEXTRAHIERTE%20DATEN%3A%3C%2Fdiv%3E%0A%20%20%20%20%20%20%20%20%3Cdiv%3E%3Cb%3EPatient-ID%3A%3C%2Fb%3E%20%24%7Bo%7D%3C%2Fdiv%3E%0A%20%20%20%20%20%20%20%20%3Cdiv%3E%3Cb%3EUntersuchung%3A%3C%2Fb%3E%20%24%7Bs%7D%3C%2Fdiv%3E%0A%20%20%20%20%20%20%20%20%3Cdiv%3E%3Cb%3EAccession-Nr%3A%3C%2Fb%3E%20%24%7Bd%7D%3C%2Fdiv%3E%0A%20%20%20%20%20%20%3C%2Fdiv%3E%0A%20%20%20%20%20%20%3Cp%20style%3D%22margin%3A0%200%2016px%3Bcolor%3A%23555%3Bfont-size%3A14px%22%3EJetzt%20zu%20%3Cb%3EOutlook%20in%20Citrix%3C%2Fb%3E%20%E2%86%92%3Cbr%3ENeue%20Mail%20%E2%86%92%20%3Cb%3EStrg%2BV%3C%2Fb%3E%3C%2Fp%3E%0A%20%20%20%20%20%20%3Cbutton%20style%3D%22background%3A%230d5c55%3Bcolor%3A%23fff%3Bborder%3Anone%3Bpadding%3A12px%2028px%3Bborder-radius%3A6px%3Bcursor%3Apointer%3Bfont-size%3A14px%22%3EOK%3C%2Fbutton%3E%0A%20%20%20%20%3C%2Fdiv%3E%60%2Ct.querySelector(%22button%22).onclick%3D()%3D%3Et.remove()%2Cdocument.body.appendChild(t)%7D)%7D)()%3B%7D)()%3B%0A" title="Ziehe mich in deine Lesezeichenleiste!">📋 RIS Meldung</a>
+          <a class="bookmarklet" href="javascript:%22use%20strict%22%3B(()%3D%3E%7B(()%3D%3E%7Blet%20e%3Db%3D%3E%5B...document.querySelectorAll(%22dt%22)%5D.find(p%3D%3Ep.textContent%3F.includes(b))%3F.nextElementSibling%3F.textContent%3F.trim()%3F%3F%22%22%2Cn%3Dnew%20Date%2Cs%3DString(n.getFullYear()).slice(-2)%2Cc%3DString(n.getMonth()%2B1).padStart(2%2C%220%22)%2Cl%3DString(n.getDate()).padStart(2%2C%220%22)%2Ca%3DMath.random().toString(36).substring(2%2C6).toUpperCase()%2Ci%3D%60RIS-%24%7Bs%7D%24%7Bc%7D%24%7Bl%7D-%24%7Ba%7D%60%2Co%3Ddocument.querySelector(%22%23ph%20p%22)%3F.textContent%3F.match(%2FID%3A%5Cs*(%5Cd%2B)%2F)%3F.%5B1%5D%3F%3F%22-%22%2Cu%3De(%22Untersuchungs-Nr%22)%7C%7C%22-%22%2Cr%3De(%22Accession-Nr%22)%7C%7C%22-%22%2Cd%3De(%22Untersuchung%22)%7C%7C%22-%22%2Cg%3D%60%24%7Bi%7D%20-%20Einzelfallmeldung%60%2Cm%3D%60Patient-ID%3A%0A%20%24%7Bo%7D%0A%0AUntersuchungsnummer%3A%0A%20%24%7Bu%7D%0A%0AAccession-Nummer%3A%0A%20%24%7Br%7D%0A%0AProzedurenname%3A%0A%20%24%7Bd%7D%0A%0AInvolvierte%20MTRA%3A%0A%20%5Bbitte%20ausf%C3%BCllen%5D%0A%0AInvolvierte%20Aerztin%20%2F%20Arzt%3A%0A%20%5Bbitte%20ausf%C3%BCllen%5D%0A%0AProblembeschreibung%20(detailliert)%3A%0A%20%5BPFLICHTFELD!%5D%0A%0AOPL%20Punkt%20Nr.%3A%0A%20%5Bnicht%20ausf%C3%BCllen%20-%20wird%20bei%20Weiterbearbeitung%20erg%C3%A4nzt%5D%0A---%60%2Ct%3Ddocument.createElement(%22div%22)%3Bt.style.cssText%3D%22position%3Afixed%3Binset%3A0%3Bbackground%3A%230008%3Bz-index%3A999999%3Bdisplay%3Aflex%3Balign-items%3Acenter%3Bjustify-content%3Acenter%3Bfont-family%3Asystem-ui%22%2Ct.innerHTML%3D%60%3Cdiv%20style%3D%22background%3A%23fff%3Bpadding%3A24px%3Bborder-radius%3A12px%3Bmax-width%3A380px%3Btext-align%3Acenter%22%3E%0A%20%20%20%20%3Cdiv%20style%3D%22font-size%3A44px%22%3E%F0%9F%93%A7%3C%2Fdiv%3E%0A%20%20%20%20%3Ch2%20style%3D%22margin%3A8px%200%2012px%3Bcolor%3A%230d5c55%22%3EOutlook%20%C3%B6ffnet%20sich...%3C%2Fh2%3E%0A%20%20%20%20%3Cdiv%20style%3D%22background%3A%230d5c55%3Bcolor%3A%23fff%3Bpadding%3A8px%2016px%3Bborder-radius%3A6px%3Bfont-family%3Amonospace%3Bfont-size%3A15px%3Bmargin-bottom%3A16px%22%3E%24%7Bi%7D%3C%2Fdiv%3E%0A%20%20%20%20%3Cdiv%20style%3D%22background%3A%23f5f5f5%3Bborder-radius%3A8px%3Bpadding%3A12px%3Btext-align%3Aleft%3Bfont-size%3A13px%3Bline-height%3A1.6%22%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22color%3A%23666%3Bfont-size%3A11px%3Bmargin-bottom%3A6px%22%3EEXTRAHIERTE%20DATEN%3A%3C%2Fdiv%3E%0A%20%20%20%20%20%20%3Cdiv%3E%3Cb%3EPatient-ID%3A%3C%2Fb%3E%20%24%7Bo%7D%3C%2Fdiv%3E%0A%20%20%20%20%20%20%3Cdiv%3E%3Cb%3EUntersuchung%3A%3C%2Fb%3E%20%24%7Bd%7D%3C%2Fdiv%3E%0A%20%20%20%20%20%20%3Cdiv%3E%3Cb%3EAccession-Nr%3A%3C%2Fb%3E%20%24%7Br%7D%3C%2Fdiv%3E%0A%20%20%20%20%3C%2Fdiv%3E%0A%20%20%3C%2Fdiv%3E%60%2Cdocument.body.appendChild(t)%2Clocation.href%3D%60mailto%3Asteffen.burghardt%40klinikumevb.de%3Bkristin.frohberg-grzyl%40klinikumevb.de%3Fsubject%3D%24%7BencodeURIComponent(g)%7D%26body%3D%24%7BencodeURIComponent(m)%7D%60%2CsetTimeout(()%3D%3Et.remove()%2C3e3)%7D)()%3B%7D)()%3B%0A" title="Ziehe mich in deine Lesezeichenleiste!">📧 RIS Meldung</a>
           <p class="drag-hint">⬆️ Diesen Button mit der Maus in die Lesezeichenleiste ziehen</p>
+          <p style="margin-top:8px;font-size:12px;color:#888">2.972 Bytes</p>
         </div>
       </div>
 
@@ -241,20 +247,40 @@ const HTML = `<!DOCTYPE html>
           <textarea id="code" readonly>javascript:%22use%20strict%22%3B(()%3D%3E%7B(()%3D%3E%7Blet%20e%3Dt%3D%3E%5B...document.querySelectorAll(%22dt%22)%5D.find(i%3D%3Ei.textContent%3F.includes(t))%3F.nextElementSibling%3F.textContent%3F.trim()%3F%3F%22%22%2Cn%3Dnew%20Date%2Cc%3DString(n.getFullYear()).slice(-2)%2Cl%3DString(n.getMonth()%2B1).padStart(2%2C%220%22)%2Ca%3DString(n.getDate()).padStart(2%2C%220%22)%2Cu%3DMath.random().toString(36).substring(2%2C6).toUpperCase()%2Cr%3D%60RIS-%24%7Bc%7D%24%7Bl%7D%24%7Ba%7D-%24%7Bu%7D%60%2Co%3Ddocument.querySelector(%22%23ph%20p%22)%3F.textContent%3F.match(%2FID%3A%5Cs*(%5Cd%2B)%2F)%3F.%5B1%5D%3F%3F%22-%22%2Cp%3De(%22Untersuchungs-Nr%22)%7C%7C%22-%22%2Cd%3De(%22Accession-Nr%22)%7C%7C%22-%22%2Cs%3De(%22Untersuchung%22)%7C%7C%22-%22%2Cb%3D%60An%3A%20steffen.burghardt%40klinikumevb.de%3B%20kristin.frohberg-grzyl%40klinikumevb.de%0ABetreff%3A%20%24%7Br%7D%20-%20Einzelfallmeldung%0A%0APatient-ID%3A%0A%20%24%7Bo%7D%0A%0AUntersuchungsnummer%3A%0A%20%24%7Bp%7D%0A%0AAccession-Nummer%3A%0A%20%24%7Bd%7D%0A%0AProzedurenname%3A%0A%20%24%7Bs%7D%0A%0AInvolvierte%20MTRA%3A%0A%20%5Bbitte%20ausf%C3%BCllen%5D%0A%0AInvolvierte%20Aerztin%20%2F%20Arzt%3A%0A%20%5Bbitte%20ausf%C3%BCllen%5D%0A%0AProblembeschreibung%20(detailliert)%3A%0A%20%5BPFLICHTFELD!%5D%0A%0AOPL%20Punkt%20Nr.%3A%0A%20%5Bnicht%20ausf%C3%BCllen%20-%20wird%20bei%20Weiterbearbeitung%20erg%C3%A4nzt%5D%0A---%60%3Bnavigator.clipboard.writeText(b).then(()%3D%3E%7Blet%20t%3Ddocument.createElement(%22div%22)%3Bt.style.cssText%3D%22position%3Afixed%3Binset%3A0%3Bbackground%3A%230008%3Bz-index%3A999999%3Bdisplay%3Aflex%3Balign-items%3Acenter%3Bjustify-content%3Acenter%3Bfont-family%3Asystem-ui%22%2Ct.onclick%3Di%3D%3Ei.target%3D%3D%3Dt%26%26t.remove()%2Ct.innerHTML%3D%60%3Cdiv%20style%3D%22background%3A%23fff%3Bpadding%3A24px%3Bborder-radius%3A12px%3Bmax-width%3A380px%3Btext-align%3Acenter%22%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22font-size%3A44px%22%3E%E2%9C%85%3C%2Fdiv%3E%0A%20%20%20%20%20%20%3Ch2%20style%3D%22margin%3A8px%200%2012px%3Bcolor%3A%230d5c55%22%3EKopiert!%3C%2Fh2%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22background%3A%230d5c55%3Bcolor%3A%23fff%3Bpadding%3A8px%2016px%3Bborder-radius%3A6px%3Bfont-family%3Amonospace%3Bfont-size%3A15px%3Bmargin-bottom%3A16px%22%3E%24%7Br%7D%3C%2Fdiv%3E%0A%20%20%20%20%20%20%3Cdiv%20style%3D%22background%3A%23f5f5f5%3Bborder-radius%3A8px%3Bpadding%3A12px%3Bmargin-bottom%3A16px%3Btext-align%3Aleft%3Bfont-size%3A13px%3Bline-height%3A1.6%22%3E%0A%20%20%20%20%20%20%20%20%3Cdiv%20style%3D%22color%3A%23666%3Bfont-size%3A11px%3Bmargin-bottom%3A6px%22%3EEXTRAHIERTE%20DATEN%3A%3C%2Fdiv%3E%0A%20%20%20%20%20%20%20%20%3Cdiv%3E%3Cb%3EPatient-ID%3A%3C%2Fb%3E%20%24%7Bo%7D%3C%2Fdiv%3E%0A%20%20%20%20%20%20%20%20%3Cdiv%3E%3Cb%3EUntersuchung%3A%3C%2Fb%3E%20%24%7Bs%7D%3C%2Fdiv%3E%0A%20%20%20%20%20%20%20%20%3Cdiv%3E%3Cb%3EAccession-Nr%3A%3C%2Fb%3E%20%24%7Bd%7D%3C%2Fdiv%3E%0A%20%20%20%20%20%20%3C%2Fdiv%3E%0A%20%20%20%20%20%20%3Cp%20style%3D%22margin%3A0%200%2016px%3Bcolor%3A%23555%3Bfont-size%3A14px%22%3EJetzt%20zu%20%3Cb%3EOutlook%20in%20Citrix%3C%2Fb%3E%20%E2%86%92%3Cbr%3ENeue%20Mail%20%E2%86%92%20%3Cb%3EStrg%2BV%3C%2Fb%3E%3C%2Fp%3E%0A%20%20%20%20%20%20%3Cbutton%20style%3D%22background%3A%230d5c55%3Bcolor%3A%23fff%3Bborder%3Anone%3Bpadding%3A12px%2028px%3Bborder-radius%3A6px%3Bcursor%3Apointer%3Bfont-size%3A14px%22%3EOK%3C%2Fbutton%3E%0A%20%20%20%20%3C%2Fdiv%3E%60%2Ct.querySelector(%22button%22).onclick%3D()%3D%3Et.remove()%2Cdocument.body.appendChild(t)%7D)%7D)()%3B%7D)()%3B%0A</textarea>
           <button onclick="copyCode()">Kopieren</button>
         </div>
+        <p style="margin-top:8px;font-size:12px;color:#888;text-align:center">3.509 Bytes</p>
       </div>
     </div>
 
+    <!-- How it works - Environment specific -->
     <div class="card">
       <h2><span class="icon">🎯</span> So funktioniert's</h2>
-      <ol class="steps">
-        <li>Öffne eine <strong>ProWorX-Patientenseite</strong> mit Untersuchungsdetails</li>
-        <li>Klicke auf <strong>"RIS Meldung"</strong> in deiner Lesezeichenleiste</li>
-        <li>Die Meldung wird <strong>in die Zwischenablage kopiert</strong> - ein Popup zeigt die extrahierten Daten</li>
-        <li>Wechsle zu <strong>Outlook in Citrix</strong> und erstelle eine neue E-Mail</li>
-        <li>Drücke <strong>Strg+V</strong> zum Einfügen</li>
-        <li>Fülle die Felder <strong>MTRA</strong>, <strong>Arzt</strong> und <strong>Problembeschreibung</strong> aus</li>
-        <li>Klicke auf <strong>Senden</strong> - fertig!</li>
-      </ol>
+
+      <!-- Citrix Workflow -->
+      <div id="workflow-citrix" class="env-content active">
+        <ol class="steps">
+          <li>Öffne eine <strong>ProWorX-Patientenseite</strong> mit Untersuchungsdetails</li>
+          <li>Klicke auf <strong>"RIS Meldung"</strong> in deiner Lesezeichenleiste</li>
+          <li><strong>Outlook öffnet sich automatisch</strong> mit einer neuen Mail - die Daten sind schon eingefügt!</li>
+          <li>Fülle die Felder <strong>MTRA</strong>, <strong>Arzt</strong> und <strong>Problembeschreibung</strong> aus</li>
+          <li>Klicke auf <strong>Senden</strong> - fertig!</li>
+        </ol>
+        <div class="highlight green" style="margin-top:20px">
+          💡 <strong>Nur 5 Schritte!</strong> Das Bookmarklet öffnet Outlook direkt - kein Kopieren nötig.
+        </div>
+      </div>
+
+      <!-- Desktop Workflow -->
+      <div id="workflow-desktop" class="env-content">
+        <ol class="steps">
+          <li>Öffne eine <strong>ProWorX-Patientenseite</strong> mit Untersuchungsdetails</li>
+          <li>Klicke auf <strong>"RIS Meldung"</strong> in deiner Lesezeichenleiste</li>
+          <li>Die Meldung wird <strong>in die Zwischenablage kopiert</strong> - ein Popup zeigt die extrahierten Daten</li>
+          <li>Wechsle zu <strong>Outlook in Citrix</strong> und erstelle eine neue E-Mail</li>
+          <li>Drücke <strong>Strg+V</strong> zum Einfügen</li>
+          <li>Fülle die Felder <strong>MTRA</strong>, <strong>Arzt</strong> und <strong>Problembeschreibung</strong> aus</li>
+          <li>Klicke auf <strong>Senden</strong> - fertig!</li>
+        </ol>
+      </div>
     </div>
 
     <div class="card help">
@@ -264,12 +290,13 @@ const HTML = `<!DOCTYPE html>
         <li><strong>Kein Bestätigungsfenster?</strong> → Browser evtl. neu laden und nochmal versuchen</li>
         <li><strong>Daten fehlen?</strong> → Die Seite muss die Untersuchungsdetails anzeigen</li>
         <li><strong>Code lässt sich nicht einfügen?</strong> → Stelle sicher, dass du in das URL-Feld klickst, nicht in das Name-Feld</li>
+        <li><strong>Outlook öffnet sich nicht? (Citrix)</strong> → Stelle sicher, dass Outlook als Standard-Mail-Programm eingerichtet ist</li>
       </ul>
     </div>
   </div>
 
   <div class="footer">
-    RIS Einzelfallmeldung Bookmarklet v1.1
+    RIS Einzelfallmeldung Bookmarklet v1.2
   </div>
 
   <script>
@@ -282,6 +309,7 @@ const HTML = `<!DOCTYPE html>
       document.querySelector(\`[onclick="setEnv('\${env}')"]\`).classList.add('active');
       document.querySelectorAll('.env-content').forEach(c => c.classList.remove('active'));
       document.getElementById('env-' + env).classList.add('active');
+      document.getElementById('workflow-' + env).classList.add('active');
       updateBrowserContent();
     }
 
