@@ -59,7 +59,7 @@
 
   <div class="container">
     <div class="card">
-      <h2><span class="icon">📥</span> Installation <span class="size-badge">994 Bytes</span></h2>
+      <h2><span class="icon">📥</span> Installation <span class="size-badge">{{BOOKMARKLET_SIZE}}</span></h2>
 
       <div class="browser-tabs">
         <button class="browser-tab active" onclick="showBrowser('edge')">
@@ -111,7 +111,7 @@
       </div>
 
       <div class="bookmarklet-container">
-        <a class="bookmarklet" href="javascript:%22use%20strict%22%3B(()%3D%3E%7B(()%3D%3E%7Blet%20e%3Dt%3D%3E%5B...document.querySelectorAll(%22dt%22)%5D.find(r%3D%3Er.textContent%3F.includes(t))%3F.nextElementSibling%3F.textContent%3F.trim()%3F%3F%22%22%2Cn%3D%60RIS%20-%20Einzelfallmeldung%0A%0APatient-ID%3A%0A%20%24%7Bdocument.querySelector(%22%23ph%20p%22)%3F.textContent%3F.match(%2FID%3A%5Cs*(%5Cd%2B)%2F)%3F.%5B1%5D%3F%3F%22%22%7D%0A%0AUntersuchungsnummer%3A%0A%20%24%7Be(%22Untersuchungs-Nr%22)%7D%0A%0AAccession-Nummer%3A%0A%20%24%7Be(%22Accession-Nr%22)%7D%0A%0AProzedurenname%3A%0A%20%24%7Be(%22Untersuchung%22)%7D%0A%0AInvolvierte%20MTRA%3A%0A%0A%0AInvolvierte%20Aerztin%20%2F%20Arzt%3A%0A%0A%0AProblembeschreibung%20(detailliert)%3A%0A%0A%0AOPL%20Punkt%20Nr.%3A%0A---%60%3Blocation.href%3D%60mailto%3Asteffen.burghardt%40klinikumevb.de%2Ckristin.frohberg-grzyl%40klinikumevb.de%3Fsubject%3D%24%7BencodeURIComponent(%22RIS%20-%20Einzelfallmeldung%22)%7D%26body%3D%24%7BencodeURIComponent(n)%7D%60%7D)()%3B%7D)()%3B%0A" title="Ziehe mich in deine Lesezeichenleiste!">📋 RIS Meldung</a>
+        <a class="bookmarklet" href="{{BOOKMARKLET_URL}}" title="Ziehe mich in deine Lesezeichenleiste!">📋 RIS Meldung</a>
         <p class="drag-hint">⬆️ Diesen Button mit der Maus in die Lesezeichenleiste ziehen</p>
       </div>
 
@@ -124,7 +124,7 @@
           <li>URL: Den Code unten kopieren und einfügen</li>
         </ol>
         <div class="code-box">
-          <textarea id="code" readonly>javascript:%22use%20strict%22%3B(()%3D%3E%7B(()%3D%3E%7Blet%20e%3Dt%3D%3E%5B...document.querySelectorAll(%22dt%22)%5D.find(r%3D%3Er.textContent%3F.includes(t))%3F.nextElementSibling%3F.textContent%3F.trim()%3F%3F%22%22%2Cn%3D%60RIS%20-%20Einzelfallmeldung%0A%0APatient-ID%3A%0A%20%24%7Bdocument.querySelector(%22%23ph%20p%22)%3F.textContent%3F.match(%2FID%3A%5Cs*(%5Cd%2B)%2F)%3F.%5B1%5D%3F%3F%22%22%7D%0A%0AUntersuchungsnummer%3A%0A%20%24%7Be(%22Untersuchungs-Nr%22)%7D%0A%0AAccession-Nummer%3A%0A%20%24%7Be(%22Accession-Nr%22)%7D%0A%0AProzedurenname%3A%0A%20%24%7Be(%22Untersuchung%22)%7D%0A%0AInvolvierte%20MTRA%3A%0A%0A%0AInvolvierte%20Aerztin%20%2F%20Arzt%3A%0A%0A%0AProblembeschreibung%20(detailliert)%3A%0A%0A%0AOPL%20Punkt%20Nr.%3A%0A---%60%3Blocation.href%3D%60mailto%3Asteffen.burghardt%40klinikumevb.de%2Ckristin.frohberg-grzyl%40klinikumevb.de%3Fsubject%3D%24%7BencodeURIComponent(%22RIS%20-%20Einzelfallmeldung%22)%7D%26body%3D%24%7BencodeURIComponent(n)%7D%60%7D)()%3B%7D)()%3B%0A</textarea>
+          <textarea id="code" readonly>{{BOOKMARKLET_URL}}</textarea>
           <button onclick="copyCode()">Kopieren</button>
         </div>
       </div>
@@ -135,7 +135,9 @@
       <ol class="steps">
         <li>Öffne eine <strong>ProWorX-Patientenseite</strong> mit Untersuchungsdetails</li>
         <li>Klicke auf <strong>"RIS Meldung"</strong> in deiner Lesezeichenleiste</li>
-        <li><strong>Outlook öffnet sich</strong> mit vorausgefüllter E-Mail</li>
+        <li>Die Meldung wird <strong>in die Zwischenablage kopiert</strong> - ein Hinweis erscheint</li>
+        <li>Wechsle zu <strong>Outlook in Citrix</strong> und erstelle eine neue E-Mail</li>
+        <li>Drücke <strong>Strg+V</strong> zum Einfügen</li>
         <li>Fülle die Felder <strong>MTRA</strong>, <strong>Arzt</strong> und <strong>Problembeschreibung</strong> aus</li>
         <li>Klicke auf <strong>Senden</strong> - fertig!</li>
       </ol>
@@ -146,8 +148,8 @@
       <ul>
         <li><strong>Button lässt sich nicht ziehen?</strong> → Nutze die manuelle Installation (siehe oben)</li>
         <li><strong>Lesezeichen tut nichts?</strong> → Stelle sicher, dass du auf einer ProWorX-Seite bist</li>
-        <li><strong>Outlook öffnet sich nicht?</strong> → Prüfe ob Outlook als Standard-Mail-App eingestellt ist</li>
-        <li><strong>Daten fehlen in der E-Mail?</strong> → Die Seite muss die Untersuchungsdetails anzeigen</li>
+        <li><strong>Kein Bestätigungsfenster?</strong> → Browser evtl. neu laden und nochmal versuchen</li>
+        <li><strong>Daten fehlen?</strong> → Die Seite muss die Untersuchungsdetails anzeigen</li>
       </ul>
     </div>
   </div>

@@ -1,17 +1,39 @@
+/**
+ * Build Pipeline for RIS Einzelfallmeldung Bookmarklet
+ *
+ * Flow:
+ *   src/bookmarklet.ts  ──┐
+ *                         ├──▶  dist/install.html
+ *   src/template.html   ──┤
+ *                         └──▶  worker/index.ts (generated)
+ */
+
 import * as esbuild from "esbuild";
-import { writeFileSync, readFileSync, mkdirSync } from "fs";
+import { writeFileSync, readFileSync, mkdirSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 
+// Paths
+const PATHS = {
+  bookmarkletSrc: join(root, "src/bookmarklet.ts"),
+  templateSrc: join(root, "src/template.html"),
+  distDir: join(root, "dist"),
+  workerDir: join(root, "worker"),
+  installHtml: join(root, "dist/install.html"),
+  workerTs: join(root, "worker/index.ts"),
+  bookmarkletMin: join(root, "dist/bookmarklet.min.js"),
+  bookmarkletTxt: join(root, "dist/bookmarklet.txt"),
+} as const;
+
 async function build() {
   console.log("🔨 Building bookmarklet...\n");
 
-  // Bundle & minify
+  // 1. Compile & minify TypeScript
   const result = await esbuild.build({
-    entryPoints: [join(root, "src/bookmarklet.ts")],
+    entryPoints: [PATHS.bookmarkletSrc],
     bundle: true,
     minify: true,
     write: false,
@@ -19,113 +41,106 @@ async function build() {
     format: "iife",
     charset: "utf8",
     legalComments: "none",
-    mangleProps: /^_/, // Mangle properties starting with _
+    mangleProps: /^_/,
     drop: ["console", "debugger"],
   });
 
   const minified = result.outputFiles[0]?.text ?? "";
-  const bookmarklet = `javascript:${encodeURIComponent(minified)}`;
+  const bookmarkletUrl = `javascript:${encodeURIComponent(minified)}`;
 
-  // Ensure dist exists
-  mkdirSync(join(root, "dist"), { recursive: true });
-
-  // Write outputs
-  writeFileSync(join(root, "dist/bookmarklet.min.js"), minified);
-  writeFileSync(join(root, "dist/bookmarklet.txt"), bookmarklet);
-
-  // Stats
+  // 2. Calculate sizes
   const jsSize = Buffer.byteLength(minified, "utf8");
-  const urlSize = Buffer.byteLength(bookmarklet, "utf8");
+  const urlSize = Buffer.byteLength(bookmarkletUrl, "utf8");
 
+  // 3. Ensure directories exist
+  mkdirSync(PATHS.distDir, { recursive: true });
+
+  // 4. Write minified JS and URL
+  writeFileSync(PATHS.bookmarkletMin, minified);
+  writeFileSync(PATHS.bookmarkletTxt, bookmarkletUrl);
+
+  // 5. Generate HTML from template
+  const html = generateHtml(bookmarkletUrl, urlSize);
+
+  // 6. Write dist/install.html
+  writeFileSync(PATHS.installHtml, html);
+
+  // 7. Generate worker/index.ts
+  generateWorker(html);
+
+  // 8. Output summary
+  printSummary(jsSize, urlSize);
+
+  return { minified, bookmarkletUrl, jsSize, urlSize };
+}
+
+/**
+ * Generate HTML by replacing placeholders in template
+ */
+function generateHtml(bookmarkletUrl: string, size: number): string {
+  if (!existsSync(PATHS.templateSrc)) {
+    throw new Error(`Template not found: ${PATHS.templateSrc}`);
+  }
+
+  const template = readFileSync(PATHS.templateSrc, "utf8");
+
+  // Escape quotes for href attribute
+  const safeUrl = bookmarkletUrl.replace(/"/g, "&quot;");
+
+  return template
+    .replace(/\{\{BOOKMARKLET_URL\}\}/g, safeUrl)
+    .replace(/\{\{BOOKMARKLET_SIZE\}\}/g, `${size.toLocaleString()} Bytes`);
+}
+
+/**
+ * Generate worker/index.ts with embedded HTML
+ */
+function generateWorker(html: string): void {
+  // Escape backticks and ${} for template literal
+  const escapedHtml = html
+    .replace(/\\/g, "\\\\")
+    .replace(/`/g, "\\`")
+    .replace(/\$\{/g, "\\${");
+
+  const workerCode = `// ⚠️ GENERATED FILE - DO NOT EDIT
+// Source: src/template.html + src/bookmarklet.ts
+// Run 'pnpm build' to regenerate
+
+const HTML = \`${escapedHtml}\`;
+
+export default {
+  async fetch(): Promise<Response> {
+    return new Response(HTML, {
+      headers: { "Content-Type": "text/html;charset=UTF-8" },
+    });
+  },
+};
+`;
+
+  writeFileSync(PATHS.workerTs, workerCode);
+}
+
+/**
+ * Print build summary
+ */
+function printSummary(jsSize: number, urlSize: number): void {
   console.log(`✅ Build complete!\n`);
   console.log(`📊 Sizes:`);
   console.log(`   JS:  ${jsSize.toLocaleString()} bytes`);
   console.log(`   URL: ${urlSize.toLocaleString()} bytes`);
-  console.log(`\n📁 Output:`);
-  console.log(`   dist/bookmarklet.min.js`);
-  console.log(`   dist/bookmarklet.txt`);
 
-  // Warning for URL length
   if (urlSize > 2000) {
     console.log(`\n⚠️  URL > 2000 bytes - may not work in all browsers!`);
   }
 
-  // Generate install.html
-  generateInstallPage(bookmarklet, urlSize);
-
-  return { minified, bookmarklet, jsSize, urlSize };
+  console.log(`\n📁 Generated files:`);
+  console.log(`   dist/bookmarklet.min.js`);
+  console.log(`   dist/bookmarklet.txt`);
+  console.log(`   dist/install.html`);
+  console.log(`   worker/index.ts`);
 }
 
-function generateInstallPage(bookmarklet: string, size: number) {
-  const html = `<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RIS Einzelfallmeldung - Installation</title>
-  <style>
-    *{box-sizing:border-box}
-    body{font-family:system-ui,-apple-system,sans-serif;background:#1a1a24;color:#fff;margin:0;padding:20px;line-height:1.6}
-    .container{max-width:600px;margin:0 auto}
-    h1{color:#0d5c55;margin-bottom:8px}
-    .subtitle{color:#888;margin-bottom:32px}
-    .card{background:#242433;border-radius:8px;padding:24px;margin-bottom:24px}
-    h2{font-size:16px;margin:0 0 16px;color:#ccc}
-    .bookmarklet{display:inline-block;background:#0d5c55;color:#fff;padding:16px 32px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;cursor:grab}
-    .bookmarklet:hover{background:#0f6b63}
-    .bookmarklet:active{cursor:grabbing}
-    .steps{counter-reset:step}
-    .steps li{counter-increment:step;margin-bottom:16px;padding-left:36px;position:relative}
-    .steps li::before{content:counter(step);position:absolute;left:0;top:0;width:24px;height:24px;background:#0d5c55;border-radius:50%;text-align:center;line-height:24px;font-size:12px;font-weight:600}
-    code{background:#333;padding:2px 6px;border-radius:4px;font-size:13px}
-    .alt{margin-top:24px;padding-top:24px;border-top:1px solid #333}
-    .alt h3{font-size:14px;color:#888;margin:0 0 12px}
-    textarea{width:100%;height:80px;background:#1a1a24;border:1px solid #333;border-radius:4px;color:#fff;padding:12px;font-family:monospace;font-size:11px;resize:vertical}
-    .copy-btn{background:#374151;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;font-size:13px;margin-top:8px}
-    .copy-btn:hover{background:#4b5563}
-    .size{color:#888;font-size:13px;margin-top:16px}
-    .warning{background:#d14d00;color:#fff;padding:12px;border-radius:4px;margin-top:16px;font-size:13px}
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>RIS Einzelfallmeldung</h1>
-    <p class="subtitle">Bookmarklet für ProWorX</p>
-
-    <div class="card">
-      <h2>Installation</h2>
-      <ol class="steps">
-        <li>Zeige deine <strong>Lesezeichenleiste</strong> an<br><code>Strg+Shift+B</code> (Chrome/Edge)</li>
-        <li><strong>Ziehe</strong> den Button unten in deine Lesezeichenleiste</li>
-        <li>Fertig! Klicke das Lesezeichen auf einer ProWorX-Seite</li>
-      </ol>
-
-      <p style="text-align:center;margin:24px 0 0">
-        <a class="bookmarklet" href="${bookmarklet.replace(/"/g, "&quot;")}">📋 RIS Meldung</a>
-      </p>
-
-      <p class="size">Größe: ${size.toLocaleString()} Bytes${size > 2000 ? " ⚠️" : ""}</p>
-      ${size > 2000 ? '<p class="warning">Das Bookmarklet ist größer als 2000 Bytes. Es funktioniert möglicherweise nicht in allen Browsern. Bei Problemen: Code manuell kopieren.</p>' : ""}
-    </div>
-
-    <div class="card">
-      <h2>Alternative: Manuell hinzufügen</h2>
-      <ol class="steps">
-        <li>Erstelle ein neues Lesezeichen</li>
-        <li>Name: <code>RIS Meldung</code></li>
-        <li>URL: Kopiere den Code unten</li>
-      </ol>
-
-      <textarea id="code" readonly>${bookmarklet}</textarea>
-      <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('code').value);this.textContent='Kopiert!'">Code kopieren</button>
-    </div>
-  </div>
-</body>
-</html>`;
-
-  mkdirSync(join(root, "docs"), { recursive: true });
-  writeFileSync(join(root, "docs/install.html"), html);
-  console.log(`   docs/install.html`);
-}
-
-build().catch(console.error);
+build().catch((err) => {
+  console.error("❌ Build failed:", err);
+  process.exit(1);
+});
